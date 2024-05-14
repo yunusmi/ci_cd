@@ -89,10 +89,11 @@ jobs:
           # S3_SECRET_KEY=$S3_SECRET_KEY
           # S3_ENDPOINT=$S3_ENDPOINT" > .env
 
-          sudo cp /etc/environment /home/ubuntu/services/backend.env
+          sudo cp /etc/environment /home/ubuntu/services/backend/.env
 
           echo "Building images"
 
           sudo docker compose build
           sudo docker compose up -d
+          sudo docker ps
           '
