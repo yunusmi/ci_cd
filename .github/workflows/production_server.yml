@@ -1,0 +1,96 @@
+name: Update & deploy application code on remote server
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    name: Update & deploy application code on remote server
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Connect to remote server
+        env:
+          PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+          HOSTNAME: ${{secrets.HOSTNAME}}
+          USER_NAME: ${{secrets.USER_NAME}}
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          echo "Connected to the server"
+          echo "Script execution started"
+
+          echo "Stopping container"
+          sudo docker stop backend-app
+
+          echo "Removing containers"
+          sudo docker container prune --force
+
+          echo "Removing images"
+          sudo docker rm backend-app
+
+          echo "Setting up repository"
+          echo "Removing old project"
+
+          cd /home/ubuntu/services
+          sudo rm -r -f ./backend || true
+
+          sudo mkdir backend
+          cd backend
+          echo "Initialization local repository"
+          sudo git init
+          echo "Adding remote repository"
+          sudo git remote add origin https://github.com/yunusmi/ci_cd.git
+          sudo git pull origin dev
+          if [ $? -eq 0 ]; then
+            echo "GIT pull success"
+          else
+            echo "GIT pull failure"
+            exit 1;
+          fi
+
+          echo "Creating config .env file"
+
+          echo "NODE_ENV=$NODE_ENV
+          APP_PORT=$APP_PORT
+          APP_HOST=$APP_HOST
+
+          # Postgres
+          POSTGRES_HOST=$POSTGRES_HOST
+          POSTGRES_PORT=$POSTGRES_PORT
+          POSTGRES_USER=$POSTGRES_USER
+          POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+          POSTGRES_DB=$POSTGRES_DB
+
+          # Passport
+          JWT_SECRET=$JWT_SECRET
+          JWT_TTL=$JWT_TTL
+          JWT_REFRESH_TTL=$JWT_REFRESH_TTL
+          SALT=$SALT
+
+          # Swagger
+          SWAGGER_USER=$SWAGGER_USER
+          SWAGGER_PASSWORD=$SWAGGER_PASSWORD
+          SKIP_SWAGGER_UI=$SKIP_SWAGGER_UI
+
+          # Mail
+          MAIL_USER=$MAIL_USER
+          MAIL_PASSWORD=$MAIL_PASSWORD
+
+          # AWS S3
+          S3_REGION=$S3_REGION
+          S3_BUCKET=$S3_BUCKET
+          S3_ACCESS_KEY=$S3_ACCESS_KEY
+          S3_SECRET_KEY=$S3_SECRET_KEY
+          S3_ENDPOINT=$S3_ENDPOINT" > .env
+
+          echo "Building images"
+
+          sudo docker compose build
+          sudo docker compose up -d
+          '
