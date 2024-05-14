@@ -4,9 +4,7 @@
   "description": "Node.js application with PM2",
   "main": "app.js",
   "scripts": {
-    "start": "pm2 start app.js --name nodejs-app",
-    "stop": "pm2 stop nodejs-app",
-    "restart": "pm2 restart nodejs-app"
+    "start": "node ./app.js"
   },
   "author": "",
   "license": "ISC",
