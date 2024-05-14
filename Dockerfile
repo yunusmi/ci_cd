@@ -13,6 +13,6 @@ COPY . .
 
 RUN npm install -g pm2
 
-RUN npm run start
+RUN npm start ./app.js
 
 CMD ["pm2", "log"]
