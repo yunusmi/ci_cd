@@ -11,6 +11,8 @@ COPY . .
 
 # RUN npm rebuild bcrypt --build-from-source
 
+RUN npm install -g pm2
+
 RUN npm run start
 
 CMD ["pm2", "log"]

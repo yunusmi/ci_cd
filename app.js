@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 
-// Пример использования библиотеки - вывод "Hello, world!" в консоль
 console.log('Hello, world!');
 
 app.get('/', (req, res) => {

@@ -38,7 +38,7 @@ jobs:
           echo "Removing old project"
 
           cd /home/ubuntu/services
-          sudo rm -r -f ./backend || true
+          sudo rm -r -f ./backend
 
           sudo mkdir backend
           cd backend
