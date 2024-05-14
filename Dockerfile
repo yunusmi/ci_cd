@@ -11,4 +11,6 @@ COPY . .
 
 # RUN npm rebuild bcrypt --build-from-source
 
-CMD ["pm2-runtime", "app.js"]
+RUN npm run start
+
+CMD ["pm2", "log"]
