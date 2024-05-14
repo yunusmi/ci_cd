@@ -1,0 +1,17 @@
+{
+  "name": "nodejs-app",
+  "version": "1.0.0",
+  "description": "Node.js application with PM2",
+  "main": "app.js",
+  "scripts": {
+    "start": "pm2 start app.js --name nodejs-app",
+    "stop": "pm2 stop nodejs-app",
+    "restart": "pm2 restart nodejs-app"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pm2": "^5.3.1"
+  }
+}
