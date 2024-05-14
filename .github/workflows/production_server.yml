@@ -32,7 +32,7 @@ jobs:
           sudo docker container prune --force
 
           echo "Removing images"
-          sudo docker rm backend-app
+          sudo docker rmi $(docker images -a -q)
 
           echo "Setting up repository"
           echo "Removing old project"
@@ -56,38 +56,40 @@ jobs:
 
           echo "Creating config .env file"
 
-          echo "NODE_ENV=$NODE_ENV
-          APP_PORT=$APP_PORT
-          APP_HOST=$APP_HOST
+          # echo "NODE_ENV=$NODE_ENV
+          # APP_PORT=$APP_PORT
+          # APP_HOST=$APP_HOST
 
-          # Postgres
-          POSTGRES_HOST=$POSTGRES_HOST
-          POSTGRES_PORT=$POSTGRES_PORT
-          POSTGRES_USER=$POSTGRES_USER
-          POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-          POSTGRES_DB=$POSTGRES_DB
+          # # Postgres
+          # POSTGRES_HOST=$POSTGRES_HOST
+          # POSTGRES_PORT=$POSTGRES_PORT
+          # POSTGRES_USER=$POSTGRES_USER
+          # POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+          # POSTGRES_DB=$POSTGRES_DB
 
-          # Passport
-          JWT_SECRET=$JWT_SECRET
-          JWT_TTL=$JWT_TTL
-          JWT_REFRESH_TTL=$JWT_REFRESH_TTL
-          SALT=$SALT
+          # # Passport
+          # JWT_SECRET=$JWT_SECRET
+          # JWT_TTL=$JWT_TTL
+          # JWT_REFRESH_TTL=$JWT_REFRESH_TTL
+          # SALT=$SALT
 
-          # Swagger
-          SWAGGER_USER=$SWAGGER_USER
-          SWAGGER_PASSWORD=$SWAGGER_PASSWORD
-          SKIP_SWAGGER_UI=$SKIP_SWAGGER_UI
+          # # Swagger
+          # SWAGGER_USER=$SWAGGER_USER
+          # SWAGGER_PASSWORD=$SWAGGER_PASSWORD
+          # SKIP_SWAGGER_UI=$SKIP_SWAGGER_UI
 
-          # Mail
-          MAIL_USER=$MAIL_USER
-          MAIL_PASSWORD=$MAIL_PASSWORD
+          # # Mail
+          # MAIL_USER=$MAIL_USER
+          # MAIL_PASSWORD=$MAIL_PASSWORD
 
-          # AWS S3
-          S3_REGION=$S3_REGION
-          S3_BUCKET=$S3_BUCKET
-          S3_ACCESS_KEY=$S3_ACCESS_KEY
-          S3_SECRET_KEY=$S3_SECRET_KEY
-          S3_ENDPOINT=$S3_ENDPOINT" > .env
+          # # AWS S3
+          # S3_REGION=$S3_REGION
+          # S3_BUCKET=$S3_BUCKET
+          # S3_ACCESS_KEY=$S3_ACCESS_KEY
+          # S3_SECRET_KEY=$S3_SECRET_KEY
+          # S3_ENDPOINT=$S3_ENDPOINT" > .env
+
+          sudo cp /etc/environment /home/ubuntu/services/backend.env
 
           echo "Building images"
 
