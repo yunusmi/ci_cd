@@ -1,0 +1,54 @@
+version: '3.5'
+
+services:
+  postgresql:
+    container_name: postgres
+    image: postgres:14
+    environment:
+      POSTGRES_USER: ${POSTGRES_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      PGDATA: /data/postgres
+    volumes:
+      - /var/data/postgres:/data/postgres
+    ports:
+      - ${POSTGRES_PORT}:5432
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - /var/data/pgadmin:/data/pgadmin
+    ports:
+      - 5050:80
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  backend_app:
+    container_name: backend_app
+    restart: always
+    depends_on:
+      - postgresql
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

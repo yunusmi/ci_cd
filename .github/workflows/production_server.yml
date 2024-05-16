@@ -26,7 +26,7 @@ jobs:
           echo "Script execution started"
 
           echo "Stopping container"
-          sudo docker stop backend-app
+          sudo docker stop backend_app
 
           echo "Removing containers"
           sudo docker container prune
@@ -37,17 +37,17 @@ jobs:
           echo "Setting up repository"
           echo "Removing old project"
 
-          cd /home/ubuntu/services
-          sudo rm -r -f ./backend
+          cd /var/www/apps
+          sudo rm -r -f ./backend_app
 
-          sudo mkdir backend
-          cd backend
+          sudo mkdir backend_app
+          cd backend_app
           echo "Initialization git repository"
-          sudo git config --global --add safe.directory /home/ubuntu/services/backend
+          sudo git config --global --add safe.directory /var/www/apps/backend_app
           sudo git init
           echo "Adding remote repository"
-          sudo git remote add origin https://$GITHUB_TOKEN@github.com/EdTech-Project/backend.git
-          sudo git pull origin dev
+          sudo git remote add origin https://github.com/ci_cd.git
+          sudo git pull origin main
           if [ $? -eq 0 ]; then
             echo "GIT pull success"
           else
@@ -55,9 +55,11 @@ jobs:
             exit 1;
           fi
 
-          echo "Creating config .env file"
+          # This is an optional setting. If you don't have any config files such as .env or any other 
+          # .config file, you can comment the 2 lines bellow
 
-          sudo cp /etc/environment /home/ubuntu/services/backend/.env
+          echo "Creating config .env file"
+          sudo cp /etc/environment /var/www/apps/backend_app/.env # make sure that you added config data to that file. File /etc/environment should include config data for your app
 
           echo "Building images"
 
